@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name="leonardoWrapper",
-    version="1.1.0",
+    version="1.1.2",
     author="the_unkown_dude, anditv21",
     author_email="zaima_max@proton.me",
     description="A wrapper for the leonardo.ai image generation",
@@ -11,7 +11,7 @@ setup(
     url="https://github.com/theunkowndude/leonardoWrapper",
     packages=find_packages(),
     install_requires=[
-        "requests",
+        "tls-client",
     ],
     python_requires=">=3.6",
 )

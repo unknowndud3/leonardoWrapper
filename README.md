@@ -8,15 +8,15 @@ The code snippet demonstrates how to use the `Leonardo` class from the `leonardo
 
 ## Steps
 
-1. **Initialization**: The `Leonardo` class is initialized with a username and password.
+1. **Initialization**: The `Leonardo` class is initialized with the account's cookie (since a captcha was added and I don't want to reveal my turnstile solver).
 
     ```python
     from leonardoWrapper import Leonardo
 
-    leonardo = Leonardo(username="your_username", password="your_password")
+    leonardo = Leonardo(cookie="your_cookie")
     ```
 
-    > **Note**: Replace `your_username` and `your_password` with your actual credentials.
+    > **Note**: Replace `your_cookie` with your actual cookie.
 
 2. **Creating an Image Generation Request**: An image generation request is created with specific parameters such as the prompt, number of images, model ID, model version, image dimensions, and guidance scale.
 
@@ -33,7 +33,7 @@ The code snippet demonstrates how to use the `Leonardo` class from the `leonardo
     ```
 
     > **Note**: Replace `model_identifier` and `model_version` with the specific model ID and version you wish to use. For a list of available models and their versions, see [models.md](https://github.com/theunkowndude/leonardoWrapper/blob/main/models.md). Please note that you can run `gen_models_md.py` to update the documentation with the latest model information.
-    
+
 
 3. **Waiting for Image Generation**: The script waits for the image generation process to complete.
 

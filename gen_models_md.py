@@ -1,6 +1,7 @@
 from leonardoWrapper import Leonardo
 
-leonardo = Leonardo(username="", password="")
+leonardo = Leonardo(cookie="")
+
 
 keys_to_remove = ["instancePrompt", "modelHeight", "modelWidth", "createdAt"]
 

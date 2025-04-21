@@ -9,9 +9,9 @@ from leonardoWrapper.util.api import RequestsHandler
 sys.dont_write_bytecode = True
 
 class Leonardo:
-    def __init__(self, username: str, password: str, proxy: str = None) -> None:
+    def __init__(self, cookie: str, proxy: str = None) -> None:
         self._requests_handler = RequestsHandler(proxy=proxy)
-        self.user = User(username=username, password=password, requests_handler=self._requests_handler)
+        self.user = User(cookie=cookie, requests_handler=self._requests_handler)
 
 
     def create_generate_image(self, prompt: str, model_id: str, negative_prompt: str = "", nswf: bool = False, image_size: int = 7, sd_version: str = None, amount_of_images: int = 4, width: int = 1368, height: int = 768, num_inference_steps: int = 10, guidance_scale: int = 7, scheduler: str = None, tiling: bool = False, public: bool = False, leonardo_magic: bool = False, enhance_prompt: bool = True, contrast: float = 3.5, preset_style: str = None, pose_to_image: bool = False, pose_to_image_type: str = "POSE", weighting: float = 0.75, high_contrast: bool = False, transparency: Literal["enabled", "disabled"] = "disabled", photo_real: bool = False, seed: int = None) -> str:

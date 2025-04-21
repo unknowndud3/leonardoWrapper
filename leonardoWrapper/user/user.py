@@ -9,10 +9,9 @@ from leonardoWrapper.util.api import RequestsHandler
 sys.dont_write_bytecode = True
 
 class User:
-    def __init__(self, username: str, password: str, requests_handler: RequestsHandler) -> None:
+    def __init__(self, cookie: str, requests_handler: RequestsHandler) -> None:
         self.acc_secrets = {
-            "username": username,
-            "password": password
+            "cookie": cookie
         }
         self.requests_handler = requests_handler
         self.user_informations: UserInfo = {}
@@ -29,21 +28,13 @@ class User:
             raise Exception("Failed to get CSRF token")
 
 
-        self.requests_handler.send_post_request(url="https://app.leonardo.ai/api/auth/callback/credentials",
-            data={
-                "username": self.acc_secrets["username"],
-                "password": self.acc_secrets["password"],
-                "redirect": False,
-                "callbackUrl": "/",
-                "csrfToken": get_csrf_token["json"]["csrfToken"],
-                "json": True
-            },
+        self.requests_handler.send_get_request(url="https://app.leonardo.ai/api/auth/session",
             headers={
                 "Accept": "*/*",
-                "Content-Type": "application/x-www-form-urlencoded",
                 "Host": "app.leonardo.ai",
                 "Origin": "https://app.leonardo.ai",
                 "Referer": "https://app.leonardo.ai/auth/login?callbackUrl=%2F",
+                "cookie": self.acc_secrets["cookie"],
             }
         )
 
@@ -160,23 +151,15 @@ class User:
                             "_eq": False
                         },
                         "createdAt": {
-                            "_lt": datetime.now(timezone.utc).strftime('%Y-%m-%dT%H:%M:%S.%f')[:-3] + "Z"
+                            "_lt": datetime.now(timezone.utc).strftime('%Y-%m-%dT%H:%M:%S.%f')[:-3]
                         }
                     },
-                    "generationsWhere": {
-                        "generated_images": {
-                            "nsfw": {
-                                "_eq": False
-                            }
-                        }
-                    }
                 },
-                "query": "query GetFeedModels($order_by: [custom_models_order_by!] = [{createdAt: desc}], $where: custom_models_bool_exp, $generationsWhere: generations_bool_exp, $userId: uuid!, $limit: Int, $offset: Int) { custom_models( order_by: $order_by where: $where limit: $limit offset: $offset ) { ...ModelParts generations(limit: 1, where: $generationsWhere, order_by: [{createdAt: asc}]) { prompt generated_images(limit: 1, order_by: [{likeCount: desc}]) { id url likeCount __typename } __typename } user_favourite_custom_models(where: {userId: {_eq: $userId}}) { userId __typename } __typename } } fragment ModelParts on custom_models { id name description instancePrompt modelHeight modelWidth coreModel createdAt sdVersion type nsfw motion public trainingStrength user { id username __typename } generated_image { url id __typename } imageCount teamId __typename }"
+                "query": "query GetFeedModels($order_by: [custom_models_order_by!] = [{createdAt: desc}], $where: custom_models_bool_exp, $generationsWhere: generations_bool_exp, $userId: uuid!, $limit: Int, $offset: Int) {  custom_models(    order_by: $order_by    where: $where    limit: $limit    offset: $offset  ) {    ...ModelParts    user_favourite_custom_models(where: {userId: {_eq: $userId}}) {      userId      __typename    }    __typename  }}fragment ModelParts on custom_models {  id  name  description  instancePrompt  modelHeight  modelWidth  coreModel  createdAt  sdVersion  type  nsfw  motion  public  trainingStrength  user {    id    username    __typename  }  generated_image {    url    id    __typename  }  imageCount  teamId  __typename}"
             }
         )
 
-        
         if "errors" in get_models["json"]:
             raise Exception(get_models["json"]["errors"][0]["message"])
-        
+
         return get_models["json"]

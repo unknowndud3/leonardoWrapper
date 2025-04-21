@@ -1,6 +1,6 @@
 import sys
 
-import requests
+import tls_client
 
 from leonardoWrapper.types.Res import DefaultResponseType
 from leonardoWrapper.util.userAgents import get_random_user_agent
@@ -10,7 +10,7 @@ sys.dont_write_bytecode = True
 
 class RequestsHandler:
     def __init__(self, proxy: str = None) -> None:
-        self.requests_session: requests.Session = requests.Session()
+        self.requests_session: tls_client.Session = tls_client.Session(client_identifier="chrome_120", random_tls_extension_order=True)
         if proxy is not None:
             self.requests_session.proxies = {
                 "http": f"http://{proxy}",
